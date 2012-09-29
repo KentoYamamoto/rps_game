@@ -1,30 +1,71 @@
 def rps_game(ary)
-	max = 0
-	ary.each do |pAry|
-		if max <= pAry.length
-			max = pAry.length
+	max,nanninme = 0,0
+	ary.each do |personAry|
+		if max <= personAry.length
+			max = personAry.length
 		end
 	end
-	(0..(max - 1)).each do |num| #何回目の手か
-	#	p num
+	(0..(max - 1)).each do |turn| #何ターン目か
 		handAry = []
-		nanninme = 0
-		ary.each do |personAry| #それぞれの人の手を
-			handAry[nanninme, 0] = [personAry[num]]
-			nanninme = nanninme + 1
+		put_into_handAry(ary, handAry, nanninme, turn)
+		result = win_hantei(handAry)
+		handAry.each do |hand|
+			if hand == result
+				ary[nanninme, 1] = [[nil]]
+			end
+			nanninme += 1
 		end
-		p handAry
-		rockFlag = handAry.find { |ele| ele == :rock }
-		scissorsFlag = handAry.find { |ele| ele == :scissors }
-		paperFlag = handAry.find { |ele| ele == :paper }
-		if !(rockFlag || scissorsFlag || paperFlag) #ぜんぶにる
-			return [-1, -1]
+		handAry = []
+		nanninme = put_into_handAry(ary, handAry, nanninme, turn)
+		p nanninme
+		finish, winner = 0,0
+		handAry.each do |hand|
+			if hand
+				finish += 1
+				winner = nanninme
+			end
+			if finish == 1 && (nanninme >= (handAry.length - 1))
+				return [turn, winner]
+			end
+			nanninme += 1
 		end
-#		elsif !(rockFlag && scissorsFlag && paperFlag)
+	end
+	return [-1, -1]
+end
 
-
+def win_hantei(handAry)
+	hantei = 0
+	if handAry.find{ |ele| ele == :rock} 
+		hantei += 1 
+	end
+	if handAry.find{ |ele| ele == :scissors}
+		hantei += 2
+	end
+	if handAry.find{ |ele| ele == :paper}
+		hantei += 4
+	end
+	if hantei == 1 || hantei == 2 || hantei == 4 || hantei == 7
+		return :draw #引き分け
+	elsif hantei == 3
+		return :scissors #グーが勝ち
+	elsif hantei == 6
+		return :paper #チョキが勝ち
+	elsif hantei == 5
+		return :rock #パーが勝ち
+	else return nil #配列がおかしいときはnilを返す（全員の手がnilとか）
 	end
 end
 
-rps_game([[:rock,:paper,:rock, :paper],[:rock,:rock,:scissors],[:paper, :paper, :paper]])
-#b = [1,1,1].find do |a| a == 2 end
+def put_into_handAry(ary, handAry, nanninme, turn)
+	nanninme = 0
+	ary.each do |personAry| #それぞれの人の手を
+		if personAry[0]
+			handAry[nanninme, 0] = [personAry[turn]]
+		else
+			handAry[nanninme, 0] = [nil]
+		end
+		nanninme += 1
+	end
+	0
+end
+rps_game([[:rock],[:rock]])
