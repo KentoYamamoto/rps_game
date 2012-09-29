@@ -7,12 +7,13 @@ def rps_game(ary)
 		handAry = []
 		(0..(ary.length - 1)).each do |person|
 			if turn < ary[person].length then handAry[person, 0] = [(ary[person])[turn]]
-			else handAry[person, 0] = [nil]	end
+			else handAry[person, 0] = [nil] end
 		end
 		result, finish, winner, nanninme = win_hantei(handAry), 0, 0, 0
 		(0..(handAry.length - 1)).each do |person|
-			finish, winner = finish+1, person if !(handAry[person] == result) && handAry[person]
-			return [turn, winner] if finish == 1 && (person >= (handAry.length - 1))
+			ary[person, 1] = [[nil]]          if handAry[person] == result
+			finish, winner = finish+1, person if !((ary[person])[turn] == result) && (ary[person])[turn]
+			return [turn, winner]             if finish == 1 && (person >= (handAry.length - 1))
 		end
 	end
 	return [-1, -1]
@@ -29,3 +30,6 @@ def win_hantei(handAry)
 	elsif hantei == 5 then return :rock #パーが勝ち
 	else return nil end #配列がおかしいときはnilを返す（全員の手がnilとか）
 end
+
+p rps_game([[:rock, :rock, :rock, :rock,:rock, :rock], [:paper,:paper,:paper,:paper, :paper, :paper, :rock], [:scissors,:scissors,:scissors,:scissors, :scissors, :scissors]])
+p rps_game([[:rock, :rock], [:paper, :scissors, :paper], [:paper, :scissors, :rock]])
