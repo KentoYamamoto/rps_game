@@ -2,10 +2,7 @@ def rps_game(ary)
 	max, handAry = 0, []
 	ary.each do |personAry| max = personAry.length if max <= personAry.length end
 	(0..(max - 1)).each do |turn| #何ターン目か
-		(0..(ary.length - 1)).each do |person|
-			if turn < ary[person].length then handAry[person, 0] = [(ary[person])[turn]]
-			else handAry[person, 0] = [nil] end
-		end
+		(0..(ary.length - 1)).each do |person| handAry[person, 0] = [(ary[person])[turn]] end
 		result, finish, winner, nanninme, handAry = win_hantei(handAry), 0, 0, 0, []
 		(0..(ary.length - 1)).each do |person|
 			ary[person, 1] = [[nil]]          if (ary[person])[turn] == result
